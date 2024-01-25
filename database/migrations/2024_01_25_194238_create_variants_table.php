@@ -16,8 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255);
             $table->string('value', 255);
-            $table->timestamp('created_at')->default(now());
-            $table->timestamp('updated_at')->default(now());
+            $table->timestamps();
             $table->foreignIdFor(Product::class);
         });
     }
