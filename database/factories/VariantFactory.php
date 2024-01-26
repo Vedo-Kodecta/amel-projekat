@@ -22,7 +22,7 @@ class VariantFactory extends Factory
             'value' => $this->faker->word,
             'created_at' => now(),
             'updated_at' => now(),
-            'product_id' => Product::factory(),
+            'product_id' => $this->faker->numberBetween(1, 10),
         ];
     }
 }
