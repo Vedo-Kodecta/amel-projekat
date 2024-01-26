@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
-use App\Http\Resources\OrderResource;
+use App\Http\Requests\ProductRequest;;
+
 use App\Http\Resources\ProductResource;
-use App\Models\Order;
 use App\Models\Product;
+use App\Models\Scopes\GlobalScope;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductService extends BaseService
@@ -21,5 +22,19 @@ class ProductService extends BaseService
         $data = parent::getAll(new $model, $searchParameter, $relationships);
 
         return ProductResource::collection($data->latest()->paginate());
+    }
+
+    public function create($request)
+    {
+        $product = Product::createProduct($request);
+
+        return ProductResource::make(parent::create($product, $this->relations));
+    }
+
+    public function addVaraint(ProductRequest $request, Product $product)
+    {
+        GlobalScope::checkIfFieldIsEmpty($request, 'price');
+
+        // return GlobalScope::addCurrentUserValueToModel($order, 'mechanic_id');
     }
 }

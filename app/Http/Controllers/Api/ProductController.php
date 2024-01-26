@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductRequest;
+use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 
@@ -23,9 +25,9 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        //
+        return $this->productService->create($request);
     }
 
     /**
@@ -50,5 +52,16 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /*
+    *State machine API controller methods
+    */
+    //Second status (order_inquiry_recieved)
+    public function setPrice(ProductRequest $request, Product $product)
+    {
+        $order = $this->productService->addVaraint($request, $product);
+
+        // return $this->orderService->generateResponseForStateMachine($order, EStateMachineFunctions::SET_PRICE, $request);
     }
 }

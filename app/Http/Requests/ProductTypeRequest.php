@@ -22,7 +22,8 @@ class ProductTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
         ];
     }
 }
