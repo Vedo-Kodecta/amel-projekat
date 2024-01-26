@@ -17,15 +17,17 @@ class RegisterController extends Controller
 
     public function registerCustomer(RegisterRequest $request)
     {
-        $role_id = $request->input('role_id', 1);
+        $user_role_id = $request->input('user_role_id', 1);
 
-        User::create(array_merge($request->validated(), ['user_role_id' => $role_id]));
+        dd($request);
+
+        User::create(array_merge($request->validated(), ['user_role_id' => $user_role_id]));
     }
 
     public function registerAdmin(RegisterRequest $request)
     {
-        $role_id = $request->input('role_id', 2);
+        $user_role_id = $request->input('user_role_id', 2);
 
-        User::create(array_merge($request->validated(), ['user_role_id' => $role_id]));
+        User::create(array_merge($request->validated(), ['user_role_id' => $user_role_id]));
     }
 }

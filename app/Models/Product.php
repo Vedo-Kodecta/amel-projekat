@@ -21,7 +21,7 @@ class Product extends Model
         return $this->belongsTo(ProductStatus::class);
     }
 
-    public function varaints(): HasMany
+    public function variants(): HasMany
     {
         return $this->hasMany(Variant::class);
     }
