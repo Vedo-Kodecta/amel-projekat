@@ -11,30 +11,26 @@ abstract class BaseService implements BaseServiceInterface
 {
     use CanLoadRelationships;
 
-    public function getAll(?Model $model = null, ?string $searchParameter, ?array $relationships = null)
+    public function getAll(?Model $model = null)
     {
         $query = $model::query();
 
-        if ($searchParameter) {
-            $query->searchByValue($searchParameter);
-        }
-
-        return $this->loadRelationships($query, $relationships);
+        return $query;
     }
 
     public function getOne(Model $model, ?array $relationships = null)
     {
-        return $this->loadRelationships($model);
+        return $model;
     }
 
     public function create($request)
     {
-        return $this->loadRelationships($request);
+        return $request;
     }
 
     public function update(Request $request, Model $model)
     {
-        return $this->loadRelationships($model::query());
+        return $model::query();
     }
 
     public function remove(Model $model)

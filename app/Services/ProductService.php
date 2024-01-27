@@ -7,6 +7,7 @@ use App\Http\Requests\ProductRequest;;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Models\Scopes\GlobalScope;
+use App\Payload\ProductPayload;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductService extends BaseService
@@ -14,14 +15,16 @@ class ProductService extends BaseService
 
     private array $relations = ['productType', 'productStatus', 'variants'];
 
-    public function getAll(?Model $model = null, ?string $searchParameter = null, ?array $relationships = null)
+    public function getAll(?Model $model = null)
     {
         $model = $model ?? Product::class;
         $relationships = $relationships ?? $this->relations;
 
-        $data = parent::getAll(new $model, $searchParameter, $relationships);
+        $query = parent::getAll(new $model);
 
-        return ProductResource::collection($data->latest()->paginate());
+        $data = ProductPayload::applyConditions($query);
+
+        return ProductResource::collection($data);
     }
 
     public function create($request)
