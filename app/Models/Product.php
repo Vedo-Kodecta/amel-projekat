@@ -18,7 +18,15 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'price', 'product_type_id', 'product_status_id'];
+    protected $fillable = [
+        'name',
+        'price',
+        'product_type_id',
+        'product_status_id',
+        'activated_by',
+        'valid_from',
+        'valid_to',
+    ];
 
     public function productType(): BelongsTo
     {
@@ -38,7 +46,6 @@ class Product extends Model
     public function scopeCreateProduct($query, ProductRequest $request)
     {
         $request->merge(['product_status_id' => $request->input('product_status_id', 1)]);
-
 
         $data = $request->validated();
         $data['product_status_id'] = 1;

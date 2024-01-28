@@ -14,15 +14,19 @@ class ProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return
-            [
-                'id' => $this->id,
-                'name' => $this->name,
-                'description' => $this->description,
-                'price' => $this->price,
-                'productType' => ProductTypeResource::make($this->whenLoaded('productType')),
-                'productStatus' => ProductStatusResource::make($this->whenLoaded('productStatus')),
-                'variants' => VariantResource::collection($this->whenLoaded('variants')),
-            ];
+        $resourceArray = [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'price' => $this->price,
+            'productType' => ProductTypeResource::make($this->whenLoaded('productType')),
+            'productStatus' => ProductStatusResource::make($this->whenLoaded('productStatus')),
+            'variants' => VariantResource::collection($this->whenLoaded('variants')),
+            'activated_by' => $this->when($this->resource->offsetExists('activated_by'), $this->activated_by),
+            'valid_from' => $this->when($this->resource->offsetExists('valid_from'), $this->valid_from),
+            'valid_to' => $this->when($this->resource->offsetExists('valid_to'), $this->valid_to),
+        ];
+
+        return $resourceArray;
     }
 }

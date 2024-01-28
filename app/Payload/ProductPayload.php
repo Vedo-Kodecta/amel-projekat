@@ -10,6 +10,9 @@ class ProductPayload extends BasePayload
     use CanLoadRelationships;
 
     private array $relations = ['productType', 'productStatus', 'variants'];
+    private array $searchByValueArray = ['name'];
+    private array $greaterThanArray = ['price'];
+    private array $lessOrEqualThanArray = ['price'];
 
     public static function applyConditions(Builder $query)
     {
@@ -25,8 +28,12 @@ class ProductPayload extends BasePayload
 
     public function searchByValue($query)
     {
-        if (request('name')) {
-            $query->where('name', 'LIKE', '%' . request('name') . '%');
+        foreach ($this->searchByValueArray as $column) {
+            $value = request($column);
+
+            if ($value !== null) {
+                $query->where($column, 'LIKE', '%' . $value . '%');
+            }
         }
 
         return $query;
@@ -34,18 +41,24 @@ class ProductPayload extends BasePayload
 
     public function greaterThan($query)
     {
-        if (request('priceGT')) {
-            $query->where('price', '>', request('priceGT'));
+        foreach ($this->greaterThanArray as $column) {
+            $value = request($column . 'GT');
+
+            if ($value !== null) {
+                $query->where($column, '>', $value);
+            }
         }
-
-
         return $query;
     }
 
     public function lessOrEqualThan($query)
     {
-        if (request('priceLTE')) {
-            $query->where('price', '<=', request('priceLTE'));
+        foreach ($this->lessOrEqualThanArray as $column) {
+            $value = request($column . 'LTE');
+
+            if ($value !== null) {
+                $query->where($column, '<=', $value);
+            }
         }
 
         return $query;

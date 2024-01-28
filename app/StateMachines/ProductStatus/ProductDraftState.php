@@ -39,7 +39,11 @@ class ProductDraftState extends BaseRepairStatusState
 
     function activate()
     {
-        //TODO: NEEDS VALID FROM AND VALID TO DATES and ACTIVATED BY
-        $this->product->update(['product_status_id' => 2]);
+        $this->product->update([
+            'product_status_id' => 2,
+            'activated_by' => auth()->user()->id,
+            'valid_from' => now(),
+            'valid_to' => now()->addDays(30),
+        ]);
     }
 }

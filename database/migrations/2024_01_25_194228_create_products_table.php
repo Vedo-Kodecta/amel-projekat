@@ -22,6 +22,9 @@ return new class extends Migration
             $table->timestamp('updated_at')->default(now());
             $table->foreignIdFor(ProductType::class);
             $table->foreignIdFor(ProductStatus::class);
+            $table->foreignId('activated_by')->nullable()->constrained('users');
+            $table->timestamp('valid_from')->nullable();
+            $table->timestamp('valid_to')->nullable();
         });
     }
 
