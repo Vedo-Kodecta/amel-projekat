@@ -33,11 +33,4 @@ class ProductService extends BaseService
 
         return ProductResource::make(parent::create($product, $this->relations));
     }
-
-    public function addVaraint(ProductRequest $request, Product $product)
-    {
-        GlobalScope::checkIfFieldIsEmpty($request, 'price');
-
-        // return GlobalScope::addCurrentUserValueToModel($order, 'mechanic_id');
-    }
 }

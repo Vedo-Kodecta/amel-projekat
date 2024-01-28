@@ -7,6 +7,6 @@ class ProductActiveState extends BaseRepairStatusState
 {
     function delete()
     {
-        $this->order->update(['product_status_id' => 3]);
+        $this->product->update(['product_status_id' => 3]);
     }
 }

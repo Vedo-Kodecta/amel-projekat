@@ -12,6 +12,8 @@ class ProductController extends Controller
 {
     public function __construct(protected ProductService $productService)
     {
+        $this->middleware('auth:sanctum')->only(['store', 'destroy']);
+        $this->middleware('checkUserRole:2')->only(['store', 'destroy']);
     }
 
     /**
@@ -49,19 +51,8 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
-    }
-
-    /*
-    *State machine API controller methods
-    */
-    //Second status (order_inquiry_recieved)
-    public function setPrice(ProductRequest $request, Product $product)
-    {
-        $order = $this->productService->addVaraint($request, $product);
-
-        // return $this->orderService->generateResponseForStateMachine($order, EStateMachineFunctions::SET_PRICE, $request);
+        return $this->productService->remove($product);
     }
 }

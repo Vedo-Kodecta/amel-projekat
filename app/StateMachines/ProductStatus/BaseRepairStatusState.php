@@ -2,20 +2,21 @@
 
 namespace App\StateMachines\ProductStatus;
 
+use App\Http\Requests\VariantRequest;
 use App\Interfaces\ProductStatusInterface;
 use App\Models\Product;
 use Exception;
 
 abstract class BaseRepairStatusState implements ProductStatusInterface
 {
-    protected Product $order;
+    protected Product $product;
 
     function __construct(Product $product)
     {
-        $this->order = $product;
+        $this->product = $product;
     }
 
-    public function addVaraint()
+    public function addVaraint(VariantRequest $request)
     {
         throw new Exception('Un-allowed action');
     }

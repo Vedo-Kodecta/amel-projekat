@@ -47,11 +47,17 @@ class Product extends Model
 
     public function state(): ProductStatusInterface
     {
-        return match (EProductStatus::from($this->productStatus->status)) {
+        $state = match (EProductStatus::from($this->productStatus->status)) {
             EProductStatus::DRAFT() => new ProductDraftState($this),
             EProductStatus::ACTIVE() => new ProductActiveState($this),
             EProductStatus::DELETED() => new ProductDeletedState($this),
             default => throw new InvalidArgumentException('Invalid status')
         };
+
+        if ($state instanceof ProductDraftState) {
+            $state->setVariantService();
+        }
+
+        return $state;
     }
 }

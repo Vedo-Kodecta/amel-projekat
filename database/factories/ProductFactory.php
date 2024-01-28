@@ -25,7 +25,7 @@ class ProductFactory extends Factory
             'created_at' => now(),
             'updated_at' => now(),
             'product_type_id' => $this->faker->numberBetween(1, 10),
-            'product_status_id' => $this->faker->numberBetween(1, 6),
+            'product_status_id' => $this->faker->numberBetween(1, 3),
         ];
     }
 }

@@ -12,6 +12,8 @@ class ProductTypeController extends Controller
 
     public function __construct(protected ProductTypeService $productTypeService)
     {
+        $this->middleware('auth:sanctum')->only(['show', 'store']);
+        $this->middleware('checkUserRole:2')->only(['store', 'destroy']);
     }
 
     /**
