@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Resources\VariantResource;
+use App\Logging\GlobalLogger;
 use App\Models\Variant;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,6 +14,7 @@ class VariantService extends BaseService
 
     public function getAll(?Model $model = null)
     {
+        GlobalLogger::log('apiLog', 'Get all product variants called');
         $model = $model ?? Variant::class;
         $relationships = $relationships ?? $this->relations;
 
@@ -24,6 +26,7 @@ class VariantService extends BaseService
 
     public function create($request)
     {
+        GlobalLogger::log('apiLog', 'Create product variants called');
         $product = Variant::createVariant($request);
 
         return VariantResource::make(parent::create($product, $this->relations));

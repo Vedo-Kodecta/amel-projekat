@@ -3,6 +3,7 @@
 namespace App\StateMachines\ProductStatus;
 
 use App\Http\Requests\VariantRequest;
+use App\Logging\GlobalLogger;
 use App\Models\Product;
 use App\Services\VariantService;
 use Illuminate\Container\Container;
@@ -19,11 +20,13 @@ class ProductDraftState extends BaseRepairStatusState
 
     function addVariant(VariantRequest $request)
     {
+        GlobalLogger::log('apiLog', 'Variant added');
         $this->variantService->create($request);
     }
 
     function removeVaraint()
     {
+        GlobalLogger::log('apiLog', 'Variant removed');
         $variantId = request('variant');
         $variants = $this->product->variants;
 
@@ -39,6 +42,7 @@ class ProductDraftState extends BaseRepairStatusState
 
     function activate()
     {
+        GlobalLogger::log('apiLog', 'Status moved to activated');
         $this->product->update([
             'product_status_id' => 2,
             'activated_by' => auth()->user()->id,

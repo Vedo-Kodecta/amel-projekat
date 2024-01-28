@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Http\Requests\ProductRequest;;
 
 use App\Http\Resources\ProductResource;
+use App\Logging\GlobalLogger;
 use App\Models\Product;
 use App\Models\Scopes\GlobalScope;
 use App\Payload\ProductPayload;
@@ -17,6 +18,7 @@ class ProductService extends BaseService
 
     public function getAll(?Model $model = null)
     {
+        GlobalLogger::log('apiLog', 'Get all products called');
         $model = $model ?? Product::class;
         $relationships = $relationships ?? $this->relations;
 
@@ -29,6 +31,7 @@ class ProductService extends BaseService
 
     public function create($request)
     {
+        GlobalLogger::log('apiLog', 'Create products called');
         $product = Product::createProduct($request);
 
         return ProductResource::make(parent::create($product, $this->relations));

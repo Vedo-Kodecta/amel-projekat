@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Requests\VariantRequest;
 use App\Http\Resources\ProductResource;
+use App\Logging\GlobalLogger;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,7 @@ class ProductStateMachineService extends BaseService
 
     public function addVariant(Product $product, VariantRequest $request)
     {
+        GlobalLogger::log('apiLog', 'Add variant called');
         return $this->performAction(
             $product,
             function ($status, $request) {
@@ -31,6 +33,7 @@ class ProductStateMachineService extends BaseService
 
     public function removeVariant(Product $product)
     {
+        GlobalLogger::log('apiLog', 'Remove variant called');
         return $this->performAction($product, function ($status) {
             $status->removeVaraint();
         });
@@ -38,6 +41,7 @@ class ProductStateMachineService extends BaseService
 
     public function activate(Product $product)
     {
+        GlobalLogger::log('apiLog', 'Activate called');
         return $this->performAction($product, function ($status) {
             $status->activate();
         });
@@ -45,6 +49,7 @@ class ProductStateMachineService extends BaseService
 
     public function delete(Product $product)
     {
+        GlobalLogger::log('apiLog', 'Delete called');
         return $this->performAction($product, function ($status) {
             $status->delete();
         });
