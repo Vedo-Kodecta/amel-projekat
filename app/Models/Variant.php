@@ -11,7 +11,12 @@ class Variant extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'value', 'product_id'];
+    protected $fillable = [
+        'name',
+        'value',
+        'price',
+        'product_id'
+    ];
 
     public function product(): BelongsTo
     {

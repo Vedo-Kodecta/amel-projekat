@@ -15,12 +15,24 @@ trait CanLoadRelationships
     ) {
         $relations = $relations ?? $this->relations ?? [];
 
-        foreach ($relations as $relation) {
-            $for->when(
-                $this->shouldIncludeRelation($relation),
-                fn ($query) => $for instanceof Model ? $for->load($relation) :
-                    $query->with($relation)
-            );
+        // Check if $for is a collection
+        if ($for instanceof \Illuminate\Database\Eloquent\Collection) {
+            // Iterate through the collection and apply loadRelationships to each model
+            $for->each(function ($model) use ($relations) {
+                $this->loadRelationships($model, $relations);
+            });
+        } else {
+            // $for is a single model instance
+            foreach ($relations as $relation) {
+                $for->when(
+                    $this->shouldIncludeRelation($relation),
+                    function ($query) use ($for, $relation) {
+                        return $for instanceof \Illuminate\Database\Eloquent\Model
+                            ? $for->load($relation)
+                            : $query->with($relation);
+                    }
+                );
+            }
         }
 
         return $for;

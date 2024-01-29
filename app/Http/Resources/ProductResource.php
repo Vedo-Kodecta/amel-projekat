@@ -18,7 +18,6 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'price' => $this->price,
             'productType' => ProductTypeResource::make($this->whenLoaded('productType')),
             'productStatus' => ProductStatusResource::make($this->whenLoaded('productStatus')),
             'variants' => VariantResource::collection($this->whenLoaded('variants')),

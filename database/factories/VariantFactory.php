@@ -20,6 +20,7 @@ class VariantFactory extends Factory
         return [
             'name' => $this->faker->word,
             'value' => $this->faker->word,
+            'price' => $this->faker->randomFloat(2, 1, 1000),
             'created_at' => now(),
             'updated_at' => now(),
             'product_id' => $this->faker->numberBetween(1, 10),

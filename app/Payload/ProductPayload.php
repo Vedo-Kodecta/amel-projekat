@@ -3,7 +3,9 @@
 namespace App\Payload;
 
 use App\Http\Traits\CanLoadRelationships;
+use App\Logging\GlobalLogger;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class ProductPayload extends BasePayload
 {
@@ -21,9 +23,24 @@ class ProductPayload extends BasePayload
         $query = $payload->searchByValue($query);
         $query = $payload->greaterThan($query);
         $query = $payload->lessOrEqualThan($query);
-        $query = $payload->relationship($query);
 
-        return $payload->applyPagination($query);
+        // Apply pagination after modifying the query
+        $result = $payload->applyPagination($query);
+
+        if ($result) {
+            $result->setCollection($result->getCollection()->filter(function ($product) {
+
+                if ($product->variants->isEmpty()) {
+                    GlobalLogger::log('apiLog', 'Product ID ' . $product->id . ' has empty variants.');
+                    return false; // Exclude the product with empty variants
+                } else {
+                    GlobalLogger::log('apiLog', 'Product ID ' . $product->id . ' has variants.');
+                    return true; // Keep the product with variants
+                }
+            }));
+        }
+
+        return $result;
     }
 
     public function searchByValue($query)
@@ -32,7 +49,7 @@ class ProductPayload extends BasePayload
             $value = request($column);
 
             if ($value !== null) {
-                $query->where($column, 'LIKE', '%' . $value . '%');
+                $query->where('products.' . $column, 'LIKE', '%' . $value . '%');
             }
         }
 
@@ -42,22 +59,41 @@ class ProductPayload extends BasePayload
     public function greaterThan($query)
     {
         foreach ($this->greaterThanArray as $column) {
-            $value = request($column . 'GT');
+            $valueGT = request($column . 'GT');
+            $valueLTE = request($column . 'LTE');
 
-            if ($value !== null) {
-                $query->where($column, '>', $value);
+            // Skip if both conditions are present
+            if ($valueGT !== null && $valueLTE !== null) {
+                continue;
+            }
+
+            if ($valueGT !== null) {
+                $query->with(['variants' => function ($variantQuery) use ($column, $valueGT) {
+                    $variantQuery->where($column, '>', $valueGT);
+                }]);
+                GlobalLogger::log('apiLog', 'Greater then applied');
             }
         }
+
         return $query;
     }
 
     public function lessOrEqualThan($query)
     {
         foreach ($this->lessOrEqualThanArray as $column) {
-            $value = request($column . 'LTE');
+            $valueLTE = request($column . 'LTE');
+            $valueGT = request($column . 'GT');
 
-            if ($value !== null) {
-                $query->where($column, '<=', $value);
+            if ($valueLTE !== null) {
+                $query->with(['variants' => function ($variantQuery) use ($column, $valueLTE, $valueGT) {
+                    $variantQuery->where($column, '<=', $valueLTE);
+
+                    if ($valueGT !== null) {
+                        $variantQuery->where($column, '>', $valueGT);
+                        GlobalLogger::log('apiLog', 'Contains both GT and LTE');
+                    }
+                }]);
+                GlobalLogger::log('apiLog', 'Less or equal then applied');
             }
         }
 
