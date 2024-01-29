@@ -4,12 +4,14 @@ namespace App\Payload;
 
 use App\Http\Traits\CanLoadRelationships;
 use App\Logging\GlobalLogger;
+use App\Traits\GlobalCacheTrait;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class ProductPayload extends BasePayload
 {
-    use CanLoadRelationships;
+    use CanLoadRelationships, GlobalCacheTrait;
 
     private array $relations = ['productType', 'productStatus', 'variants'];
     private array $searchByValueArray = ['name'];
@@ -24,21 +26,28 @@ class ProductPayload extends BasePayload
         $query = $payload->greaterThan($query);
         $query = $payload->lessOrEqualThan($query);
 
-        // Apply pagination after modifying the query
-        $result = $payload->applyPagination($query);
+        // Include query parameters in the cache key
+        $cacheKey = 'all_products_' . md5(json_encode(request()->all()));
 
-        if ($result) {
-            $result->setCollection($result->getCollection()->filter(function ($product) {
+        // Attempt to get data from cache
+        $result = $payload->getCachedData($cacheKey, 60, function () use ($payload, $query) {
+            // Apply pagination after modifying the query
+            $result = $payload->applyPagination($query);
 
-                if ($product->variants->isEmpty()) {
-                    GlobalLogger::log('apiLog', 'Product ID ' . $product->id . ' has empty variants.');
-                    return false; // Exclude the product with empty variants
-                } else {
-                    GlobalLogger::log('apiLog', 'Product ID ' . $product->id . ' has variants.');
-                    return true; // Keep the product with variants
-                }
-            }));
-        }
+            if ($result) {
+                $result->setCollection($result->getCollection()->filter(function ($product) {
+                    if ($product->variants->isEmpty()) {
+                        GlobalLogger::log('apiLog', 'Product ID ' . $product->id . ' has empty variants.');
+                        return false; // Exclude the product with empty variants
+                    } else {
+                        GlobalLogger::log('apiLog', 'Product ID ' . $product->id . ' has variants.');
+                        return true; // Keep the product with variants
+                    }
+                }));
+            }
+
+            return $result;
+        });
 
         return $result;
     }
