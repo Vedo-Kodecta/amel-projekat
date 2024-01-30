@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 interface BaseServiceInterface
 {
-    public function getAll(?Model $model);
+    public function getPagable(?Model $model);
     public function getOne(Model $model);
     public function create(mixed $request);
     public function update(Request $request, Model $model);

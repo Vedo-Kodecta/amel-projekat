@@ -19,25 +19,25 @@ abstract class BaseRepairStatusState implements ProductStatusInterface
 
     public function addVaraint(VariantRequest $request)
     {
-        GlobalLogger::log('apiLog', 'Tried accessing unallowed action');
+        GlobalLogger::log('apiLog', 'Tried accessing unallowed action addVaraint');
         throw new Exception('Un-allowed action');
     }
 
     public function removeVaraint()
     {
-        GlobalLogger::log('apiLog', 'Tried accessing unallowed action');
+        GlobalLogger::log('apiLog', 'Tried accessing unallowed action removeVaraint');
         throw new Exception('Un-allowed action');
     }
 
     public function activate()
     {
-        GlobalLogger::log('apiLog', 'Tried accessing unallowed action');
+        GlobalLogger::log('apiLog', 'Tried accessing unallowed action activate');
         throw new Exception('Un-allowed action');
     }
 
     public function delete()
     {
-        GlobalLogger::log('apiLog', 'Tried accessing unallowed action');
+        GlobalLogger::log('apiLog', 'Tried accessing unallowed action delete');
         throw new Exception('Un-allowed action');
     }
 }

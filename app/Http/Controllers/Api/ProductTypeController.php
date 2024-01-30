@@ -21,7 +21,7 @@ class ProductTypeController extends Controller
      */
     public function index()
     {
-        return $this->productTypeService->getAll();
+        return $this->productTypeService->getPagable();
     }
 
     /**

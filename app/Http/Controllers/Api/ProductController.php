@@ -21,7 +21,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return $this->productService->getAll();
+        return $this->productService->getPagable();
     }
 
     /**
@@ -35,9 +35,9 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        //
+        return $this->productService->getOne($product);
     }
 
     /**

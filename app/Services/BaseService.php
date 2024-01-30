@@ -11,14 +11,14 @@ abstract class BaseService implements BaseServiceInterface
 {
     use CanLoadRelationships;
 
-    public function getAll(?Model $model = null)
+    public function getPagable(?Model $model = null)
     {
         $query = $model::query();
 
         return $query;
     }
 
-    public function getOne(Model $model, ?array $relationships = null)
+    public function getOne(Model $model)
     {
         return $model;
     }

@@ -15,7 +15,7 @@ class ProductTypeService extends BaseService
 
     private array $relations = ['products'];
 
-    public function getAll(?Model $model = null, ?string $searchParameter = null, ?array $relationships = null)
+    public function getPagable(?Model $model = null, ?string $searchParameter = null, ?array $relationships = null)
     {
         GlobalLogger::log('apiLog', 'Get all product types called');
 
@@ -23,7 +23,7 @@ class ProductTypeService extends BaseService
             $model = $model ?? ProductType::class;
             $relationships = $relationships ?? $this->relations;
 
-            $data = parent::getAll(new $model, $relationships);
+            $data = parent::getPagable(new $model, $relationships);
 
             return ProductTypeResource::collection($data->latest()->paginate());
         });

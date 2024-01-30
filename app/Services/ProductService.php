@@ -19,13 +19,13 @@ class ProductService extends BaseService
 
     private array $relations = ['productType', 'productStatus', 'variants'];
 
-    public function getAll(?Model $model = null)
+    public function getPagable(?Model $model = null)
     {
         GlobalLogger::log('apiLog', 'Get all products called');
 
         return $this->getCachedData('all_products', 60, function () use ($model) {
             $model = $model ?? Product::class;
-            $query = parent::getAll(new $model);
+            $query = parent::getPagable(new $model);
             $data = ProductPayload::applyConditions($query);
 
             return ProductResource::collection($data);
@@ -40,5 +40,11 @@ class ProductService extends BaseService
         Cache::forget('all_products');
 
         return ProductResource::make(parent::create($product, $this->relations));
+    }
+
+      public function getOne(Model $model)
+    {
+
+        return ProductResource::make(parent::getOne($model, $this->relations));
     }
 }

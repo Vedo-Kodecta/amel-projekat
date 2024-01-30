@@ -11,7 +11,7 @@ class CustomExceptionHandler extends ExceptionHandler
     public function render($request, Exception|\Throwable $exception)
     {
         if ($exception instanceof QueryException) {
-            return response()->json(['message' => 'Database error: ' . $exception->getMessage()], 500);
+            return response()->json(['message' => 'Database error: ' . $exception->getMessage()], 502);
         } else {
             return response()->json(['message' => $exception->getMessage()], 500);
         }

@@ -26,22 +26,20 @@ class ProductPayload extends BasePayload
         $query = $payload->greaterThan($query);
         $query = $payload->lessOrEqualThan($query);
 
-        // Include query parameters in the cache key
         $cacheKey = 'all_products_' . md5(json_encode(request()->all()));
 
-        // Attempt to get data from cache
         $result = $payload->getCachedData($cacheKey, 60, function () use ($payload, $query) {
-            // Apply pagination after modifying the query
+     
             $result = $payload->applyPagination($query);
 
             if ($result) {
                 $result->setCollection($result->getCollection()->filter(function ($product) {
                     if ($product->variants->isEmpty()) {
                         GlobalLogger::log('apiLog', 'Product ID ' . $product->id . ' has empty variants.');
-                        return false; // Exclude the product with empty variants
+                        return false; 
                     } else {
                         GlobalLogger::log('apiLog', 'Product ID ' . $product->id . ' has variants.');
-                        return true; // Keep the product with variants
+                        return true; 
                     }
                 }));
             }
