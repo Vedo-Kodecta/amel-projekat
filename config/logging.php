@@ -134,6 +134,18 @@ return [
             'path' => storage_path('logs/apiLog.log'),
             'level' => 'debug'
         ],
+        'requests' => [
+            'driver' => 'single',
+            'tap' => [SimpleFormatter::class],
+            'path' => storage_path('logs/requests.log'),
+            'level' => 'debug'
+        ],
+        'exceptions' => [
+            'driver' => 'single',
+            'tap' => [SimpleFormatter::class],
+            'path' => storage_path('logs/exceptions.log'),
+            'level' => 'debug'
+        ],
     ],
 
 ];
