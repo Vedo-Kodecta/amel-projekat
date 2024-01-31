@@ -42,9 +42,8 @@ class ProductService extends BaseService
         return ProductResource::make(parent::create($product, $this->relations));
     }
 
-      public function getOne(Model $model)
+      public function getOne(Model $model, array $relations = null)
     {
-
         return ProductResource::make(parent::getOne($model, $this->relations));
     }
 }

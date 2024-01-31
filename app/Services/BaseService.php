@@ -18,9 +18,9 @@ abstract class BaseService implements BaseServiceInterface
         return $query;
     }
 
-    public function getOne(Model $model)
+    public function getOne(Model $model, array $relations = null)
     {
-        return $model;
+        return $this->loadRelationships($model, $relations); 
     }
 
     public function create($request)
