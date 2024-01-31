@@ -15,8 +15,8 @@ class ProductPayload extends BasePayload
 
     private array $relations = ['productType', 'productStatus', 'variants'];
     private array $searchByValueArray = ['name'];
-    private array $greaterThanArray = ['price'];
-    private array $lessOrEqualThanArray = ['price'];
+    private array $greaterThanArray = ['price','valid_from'];
+    private array $lessOrEqualThanArray = ['price','valid_to'];
 
     public static function applyConditions(Builder $query)
     {
@@ -69,17 +69,21 @@ class ProductPayload extends BasePayload
             $valueGT = request($column . 'GT');
             $valueLTE = request($column . 'LTE');
 
-            // Skip if both conditions are present
             if ($valueGT !== null && $valueLTE !== null) {
                 continue;
             }
 
             if ($valueGT !== null) {
-                $query->with(['variants' => function ($variantQuery) use ($column, $valueGT) {
+               if($column === 'price'){
+                 $query->with(['variants' => function ($variantQuery) use ($column, $valueGT) {
                     $variantQuery->where($column, '>', $valueGT);
                 }]);
-                GlobalLogger::log('apiLog', 'Greater then applied');
-            }
+                GlobalLogger::log('apiLog', 'Greater then applied to price in variant');
+               } else {
+                 $query->where($column, '>', $valueGT);
+                GlobalLogger::log('apiLog', 'Greater than applied to' . $column);
+               }
+            } 
         }
 
         return $query;
@@ -92,7 +96,8 @@ class ProductPayload extends BasePayload
             $valueGT = request($column . 'GT');
 
             if ($valueLTE !== null) {
-                $query->with(['variants' => function ($variantQuery) use ($column, $valueLTE, $valueGT) {
+               if($column === 'price'){
+                 $query->with(['variants' => function ($variantQuery) use ($column, $valueLTE, $valueGT) {
                     $variantQuery->where($column, '<=', $valueLTE);
 
                     if ($valueGT !== null) {
@@ -100,7 +105,11 @@ class ProductPayload extends BasePayload
                         GlobalLogger::log('apiLog', 'Contains both GT and LTE');
                     }
                 }]);
-                GlobalLogger::log('apiLog', 'Less or equal then applied');
+                GlobalLogger::log('apiLog', 'Less or equal then applied to price');
+               } else {
+                 $query->where($column, '<=', $valueLTE);
+                GlobalLogger::log('apiLog', 'Less or equal then applied to' . $column);
+               }
             }
         }
 
