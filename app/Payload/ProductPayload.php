@@ -70,7 +70,7 @@ class ProductPayload extends BasePayload
             $valueGT = request($column . 'GT');
             $valueLTE = request($column . 'LTE');
 
-            if ($valueGT !== null && $valueLTE !== null) {
+            if ($valueGT !== null && $valueLTE !== null && $column==='price') {
                 continue;
             }
 
