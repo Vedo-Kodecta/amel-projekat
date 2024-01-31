@@ -33,5 +33,6 @@ Route::prefix('/product/{product}/state-machine')->group(function () {
         Route::put('/remove-variant/{variant}', [ProductStateMachineController::class, 'removeVariant']);
         Route::put('/activate', [ProductStateMachineController::class, 'activate']);
         Route::put('/delete', [ProductStateMachineController::class, 'delete']);
+        Route::get('/listAvailableFunctions', [ProductStateMachineController::class, 'listAvailableFunctions']);
     });
 });

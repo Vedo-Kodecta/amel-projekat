@@ -6,6 +6,11 @@ use App\Logging\GlobalLogger;
 
 class ProductActiveState extends BaseRepairStatusState
 {
+    function listAvailableFunctions()
+    {
+        return ['delete'];
+    }
+
     function delete()
     {
         GlobalLogger::log('apiLog', 'Status moved to deleted');

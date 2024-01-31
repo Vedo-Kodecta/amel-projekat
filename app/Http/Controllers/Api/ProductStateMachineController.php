@@ -35,4 +35,9 @@ class ProductStateMachineController extends Controller
     {
         return $this->productStateMachineService->delete($product);
     }
+
+     public function listAvailableFunctions(Product $product)
+    {
+        return $this->productStateMachineService->listAvailableFunctions($product);
+    }
 }

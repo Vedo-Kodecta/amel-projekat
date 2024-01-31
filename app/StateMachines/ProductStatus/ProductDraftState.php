@@ -13,6 +13,11 @@ class ProductDraftState extends BaseRepairStatusState
 {
     protected VariantService $variantService;
 
+    public function listAvailableFunctions()
+    {
+        return ['addVariant', 'removeVariant', 'activate'];
+    }
+
     public function setVariantService()
     {
         $this->variantService = Container::getInstance()->make(VariantService::class);

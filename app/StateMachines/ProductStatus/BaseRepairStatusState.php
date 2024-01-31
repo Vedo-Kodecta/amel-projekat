@@ -17,6 +17,11 @@ abstract class BaseRepairStatusState implements ProductStatusInterface
         $this->product = $product;
     }
 
+    public function listAvailableFunctions()
+    {
+        return [];
+    }
+
     public function addVaraint(VariantRequest $request)
     {
         GlobalLogger::log('apiLog', 'Tried accessing unallowed action addVaraint');

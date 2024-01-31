@@ -54,4 +54,21 @@ class ProductStateMachineService extends BaseService
             $status->delete();
         });
     }
+
+    public function listAvailableFunctions(Product $product)
+    {
+        GlobalLogger::log('apiLog', 'List available functions called');
+        $currentState = $product->state();
+
+        if ($currentState) {
+            $availableFunctions = $currentState->listAvailableFunctions();
+
+            GlobalLogger::log('apiLog', 'Available functions: ' . implode(', ', $availableFunctions));
+
+            return $availableFunctions;
+        } else {
+            GlobalLogger::log('apiLog', 'Invalid state or unsupported state machine');
+            return [];
+        }
+    }
 }

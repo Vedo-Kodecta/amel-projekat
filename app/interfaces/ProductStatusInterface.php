@@ -10,4 +10,5 @@ interface ProductStatusInterface
     function removeVaraint();
     function activate();
     function delete();
+    function listAvailableFunctions();
 }
