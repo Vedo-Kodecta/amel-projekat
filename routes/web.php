@@ -20,9 +20,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('auth')->group(function () {
-    Route::post('/login', LoginController::class);
-    Route::post('/logout', LogoutController::class);
-    Route::post('/register/registerCustomer', [RegisterController::class, 'registerCustomer']);
-    Route::post('/register/registerAdmin', [RegisterController::class, 'registerAdmin']);
-});
+// Route::prefix('auth')->group(function () {
+//     Route::post('/login', LoginController::class);
+//     Route::post('/logout', LogoutController::class);
+//     Route::post('/register/registerCustomer', [RegisterController::class, 'registerCustomer']);
+//     Route::post('/register/registerAdmin', [RegisterController::class, 'registerAdmin']);
+// });

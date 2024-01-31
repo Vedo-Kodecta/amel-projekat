@@ -21,6 +21,7 @@ class ProductStateMachineService extends BaseService
 
     public function addVariant(Product $product, VariantRequest $request)
     {
+
         GlobalLogger::log('apiLog', 'Add variant called');
         return $this->performAction(
             $product,

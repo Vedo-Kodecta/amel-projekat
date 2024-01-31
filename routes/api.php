@@ -4,6 +4,9 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductStateMachineController;
 use App\Http\Controllers\Api\ProductTypeController;
 use App\Http\Controllers\Api\VariantController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,3 +39,8 @@ Route::prefix('/product/{product}/state-machine')->group(function () {
         Route::get('/listAvailableFunctions', [ProductStateMachineController::class, 'listAvailableFunctions']);
     });
 });
+
+Route::post('/login', LoginController::class);
+Route::middleware('auth:sanctum')->post('/logout', LogoutController::class);
+Route::post('/register/registerCustomer', [RegisterController::class, 'registerCustomer']);
+Route::post('/register/registerAdmin', [RegisterController::class, 'registerAdmin']);
