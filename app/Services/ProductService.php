@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Http\Requests\ProductRequest;;
-
 use App\Http\Resources\ProductResource;
 use App\Logging\GlobalLogger;
 use App\Models\Product;

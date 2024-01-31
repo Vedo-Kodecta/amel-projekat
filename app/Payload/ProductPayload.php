@@ -23,6 +23,7 @@ class ProductPayload extends BasePayload
         $payload = new static();
 
         $query = $payload->searchByValue($query);
+        $query = $payload->relationship($query);
         $query = $payload->greaterThan($query);
         $query = $payload->lessOrEqualThan($query);
 
