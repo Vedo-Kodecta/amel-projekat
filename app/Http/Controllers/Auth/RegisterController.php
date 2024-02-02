@@ -19,7 +19,6 @@ class RegisterController extends Controller
     {
         $user_role_id = $request->input('user_role_id', 1);
 
-        dd($request);
 
         User::create(array_merge($request->validated(), ['user_role_id' => $user_role_id]));
     }

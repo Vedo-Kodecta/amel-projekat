@@ -33,7 +33,8 @@ class ProductPayload extends BasePayload
 
             $result = $payload->applyPagination($query);
 
-            if ($result) {
+            //fix search
+            if ($result && (request('priceGT') || request('priceLTE'))) {
                 $result->setCollection($result->getCollection()->filter(function ($product) {
                     if ($product->variants->isEmpty()) {
                         GlobalLogger::log('apiLog', 'Product ID ' . $product->id . ' has empty variants.');

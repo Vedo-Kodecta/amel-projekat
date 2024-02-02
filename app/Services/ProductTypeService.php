@@ -9,6 +9,7 @@ use App\Traits\GlobalCacheTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
+//TODO MODIFIKUJ PTS
 class ProductTypeService extends BaseService
 {
     use GlobalCacheTrait;

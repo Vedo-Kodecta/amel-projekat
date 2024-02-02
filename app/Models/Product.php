@@ -25,6 +25,7 @@ class Product extends Model
         'activated_by',
         'valid_from',
         'valid_to',
+        'description',
     ];
 
     public function productType(): BelongsTo
@@ -42,13 +43,11 @@ class Product extends Model
         return $this->hasMany(Variant::class);
     }
 
-    public function scopeCreateProduct($query, ProductRequest $request)
+    public function scopeCreateProduct($query, $request)
     {
-        $request->merge(['product_status_id' => $request->input('product_status_id', 1)]);
+        $request['product_status_id'] =  1;
 
-        $data = $request->validated();
-        $data['product_status_id'] = 1;
-        return $query->create($data);
+        return $query->create($request);
     }
 
     public function state(): ProductStatusInterface

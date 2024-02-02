@@ -24,7 +24,6 @@ class GlobalLogger
      */
     public static function logException(\Exception $exception)
     {
-        dd('usao');
         Log::channel('exceptions')->warning('Exception occurred', ['exception' => $exception]);
     }
 

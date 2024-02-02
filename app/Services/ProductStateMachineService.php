@@ -8,7 +8,7 @@ use App\Logging\GlobalLogger;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
-class ProductStateMachineService extends BaseService
+class ProductStateMachineService 
 {
     private function performAction(Product $product, callable $action, ?Request $request = null)
     {
