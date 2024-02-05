@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Requests\SearchObjects\VariantSearchObject;
 use App\Http\Resources\VariantResource;
 use App\Logging\GlobalLogger;
 use App\Models\Variant;
@@ -15,23 +16,6 @@ class VariantService extends BaseService
 {
 
     use GlobalCacheTrait;
-    private array $relations = ['product', 'variants'];
-
-    public function getAll(?Model $model = null)
-    {
-
-        GlobalLogger::log('apiLog', 'Get all product variants called');
-
-        return $this->getCachedData('all_variants', 60, function () use ($model) {
-            $model = $model ?? Variant::class;
-            $relationships = $relationships ?? $this->relations;
-
-            $data = parent::getAll(new $model)
-                ->where(['product_id' => $model::query()->getProduct()]);
-
-            return VariantResource::collection($data->latest()->paginate());
-        });
-    }
 
     public function create($request)
     {
@@ -40,6 +24,42 @@ class VariantService extends BaseService
 
         Cache::forget('all_variants');
 
-        return VariantResource::make(parent::create($product, $this->relations));
+        return VariantResource::make($product);
+    }
+
+    public function addFilter($searchObject, $query)
+    {
+
+        return $query;
+    }
+
+    public function includeRelation($searchObject, $query)
+    {
+
+        if ($searchObject->includeProduct) {
+            $query = $query->with('product');
+        }
+
+        return $query;
+    }
+
+    public function getSearchObject($params)
+    {
+        return new VariantSearchObject($params);
+    }
+
+    protected function getModelClass()
+    {
+        return new Variant();
+    }
+
+    protected function getCachedName($key = 'getPagable')
+    {
+        $cacheNames = [
+            'getPagable' => 'all_products',
+            'getOne' => 'one_product',
+        ];
+
+        return $cacheNames[$key] ?? $cacheNames['getPagable'];
     }
 }

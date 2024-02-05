@@ -21,52 +21,10 @@ class ProductController extends BaseController
         $this->middleware('checkUserRole:2')->only(['store', 'destroy']);
     }
 
-    
+
     protected $requestClass = ProductRequest::class;
 
-    /**
-     * Display a listing of the resource.
-     */
-    // public function index()
-    // {
-    //     return $this->productService->getPagable();
-    // }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function store(ProductRequest $request)
-    // {
-    //     parent::store($request);
-    //     return $this->productService->create($request);
-    // }
-
-    // /**
-    //  * Display the specified resource.
-    //  */
-    // public function show( $product)
-    // {
-    //     dd($product);
-    //     return $this->productService->getOne($product);
-    // }
-
-    // /**
-    //  * Update the specified resource in storage.
-    //  */
-    // public function update(Request $request, string $id)
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Remove the specified resource from storage.
-    //  */
-    // public function destroy(Product $product)
-    // {
-    //     return $this->productService->remove($product);
-    // }
-
-     public function getInsertRequestClass()
+    public function getInsertRequestClass()
     {
         return ProductRequest::class;
     }
@@ -76,14 +34,12 @@ class ProductController extends BaseController
         return new ProductSearchObject($params);
     }
 
-      public function createResourcePayload($request, $collection = false) : ProductResource | AnonymousResourceCollection
+    public function createResourcePayload($request, $collection = false): ProductResource | AnonymousResourceCollection
     {
-        if($collection)
-        {
+        if ($collection) {
             return ProductResource::collection($request);
         }
 
         return new ProductResource($request);
     }
-    
 }

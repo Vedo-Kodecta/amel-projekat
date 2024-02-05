@@ -15,20 +15,6 @@ class ProductService extends BaseService
 {
     use GlobalCacheTrait;
 
-    private array $relations = ['productType', 'productStatus', 'variants'];
-
-    public function getPagable(?Model $model = null)
-    {
-        GlobalLogger::log('apiLog', 'Get all products called');
-
-        return $this->getCachedData('all_products', 60, function () use ($model) {
-            $model = $model ?? Product::class;
-            $query = parent::getPagable(new $model);
-            $data = ProductPayload::applyConditions($query);
-
-            return ProductResource::collection($data);
-        });
-    }
 
     public function create(array $request)
     {

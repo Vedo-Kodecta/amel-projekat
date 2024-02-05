@@ -2,57 +2,43 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SearchObjects\VariantSearchObject;
 use App\Http\Requests\VariantRequest;
+use App\Http\Resources\VariantResource;
 use App\Models\Product;
 use App\Models\Variant;
 use App\Services\VariantService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class VariantController extends Controller
+class VariantController extends BaseController
 {
     public function __construct(protected VariantService $variantService)
     {
-        $this->middleware('auth:sanctum')->only(['show', 'store']);
-        $this->middleware('checkUserRole:2')->only(['store', 'destroy']);
-    }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return $this->variantService->getAll();
+        parent::__construct($variantService);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(VariantRequest $request, Product $product)
+
+    protected $requestClass = VariantRequest::class;
+
+    public function getInsertRequestClass()
     {
-        return $this->variantService->create($request);
+        return VariantRequest::class;
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function getSearchObject($params)
     {
-        //
+        return new VariantSearchObject($params);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function createResourcePayload($request, $collection = false): VariantResource | AnonymousResourceCollection
     {
-        //
-    }
+        if ($collection) {
+            return VariantResource::collection($request);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Product $product, Variant $variant)
-    {
-        return $this->variantService->remove($variant);
+        return new VariantResource($request);
     }
 }
