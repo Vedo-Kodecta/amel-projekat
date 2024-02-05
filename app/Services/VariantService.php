@@ -29,13 +29,11 @@ class VariantService extends BaseService
 
     public function addFilter($searchObject, $query)
     {
-
         return $query;
     }
 
     public function includeRelation($searchObject, $query)
     {
-
         if ($searchObject->includeProduct) {
             $query = $query->with('product');
         }
@@ -56,8 +54,8 @@ class VariantService extends BaseService
     protected function getCachedName($key = 'getPagable')
     {
         $cacheNames = [
-            'getPagable' => 'all_products',
-            'getOne' => 'one_product',
+            'getPagable' => 'all_variants',
+            'getOne' => 'one_variant',
         ];
 
         return $cacheNames[$key] ?? $cacheNames['getPagable'];

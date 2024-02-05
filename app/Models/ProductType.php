@@ -18,8 +18,8 @@ class ProductType extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function scopeCreateProductType($query, ProductTypeRequest $request)
+    public function scopeCreateProductType($query, array $request)
     {
-        return $query->create($request->validated());
+        return $query->create($request);
     }
 }

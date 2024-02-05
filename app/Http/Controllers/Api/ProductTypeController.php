@@ -2,57 +2,41 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductTypeRequest;
+use App\Http\Requests\SearchObjects\ProductTypeSearchObject;
+use App\Http\Resources\ProductTypeResource;
 use App\Services\ProductTypeService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class ProductTypeController extends Controller
+class ProductTypeController extends BaseController
 {
 
     public function __construct(protected ProductTypeService $productTypeService)
     {
-        $this->middleware('auth:sanctum')->only(['store', 'destroy']);
-        $this->middleware('checkUserRole:2')->only(['store', 'destroy']);
+        parent::__construct($productTypeService);
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $requestClass = ProductTypeRequest::class;
+
+    public function getInsertRequestClass()
     {
-        return $this->productTypeService->getPagable();
+        return ProductTypeRequest::class;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(ProductTypeRequest $request)
+    public function getSearchObject($params)
     {
-        return $this->productTypeService->create($request);
+        return new ProductTypeSearchObject($params);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function createResourcePayload($request, $collection = false): ProductTypeResource | AnonymousResourceCollection
     {
-        //
-    }
+        if ($collection) {
+            return ProductTypeResource::collection($request);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return new ProductTypeResource($request);
     }
 }

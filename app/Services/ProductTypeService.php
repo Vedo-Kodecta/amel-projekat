@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Requests\SearchObjects\ProductTypeSearchObject;
 use App\Http\Resources\ProductTypeResource;
 use App\Logging\GlobalLogger;
 use App\Models\ProductType;
@@ -14,29 +15,49 @@ class ProductTypeService extends BaseService
 {
     use GlobalCacheTrait;
 
-    private array $relations = ['products'];
-
-    public function getPagable(?Model $model = null, ?string $searchParameter = null, ?array $relationships = null)
-    {
-        GlobalLogger::log('apiLog', 'Get all product types called');
-
-        return $this->getCachedData('all_products_types', 60, function () use ($model) {
-            $model = $model ?? ProductType::class;
-            $relationships = $relationships ?? $this->relations;
-
-            $data = parent::getPagable(new $model, $relationships);
-
-            return ProductTypeResource::collection($data->latest()->paginate());
-        });
-    }
-
     public function create($request)
     {
         GlobalLogger::log('apiLog', 'Create product types called');
-        $product = ProductType::createProductType($request);
 
         Cache::forget('all_products_types');
 
-        return ProductTypeResource::make(parent::create($product, $this->relations));
+        $product = ProductType::createProductType($request);
+
+        return ProductTypeResource::make($product);
+    }
+
+    public function addFilter($searchObject, $query)
+    {
+        if ($searchObject->name) {
+            $query->where('name', 'LIKE', '%' . $searchObject->name . '%');
+        }
+
+        return $query;
+    }
+
+    public function includeRelation($searchObject, $query)
+    {
+
+        return $query;
+    }
+
+    public function getSearchObject($params)
+    {
+        return new ProductTypeSearchObject($params);
+    }
+
+    protected function getModelClass()
+    {
+        return new ProductType();
+    }
+
+    protected function getCachedName($key = 'getPagable')
+    {
+        $cacheNames = [
+            'getPagable' => 'all_products_types',
+            'getOne' => 'one_product_type',
+        ];
+
+        return $cacheNames[$key] ?? $cacheNames['getPagable'];
     }
 }
